@@ -23,12 +23,34 @@ defmodule HangmanGameTest do
   end
 
   describe "make_move" do
-    test "won't change state if state is won or lost" do
+    test "won't change state if state is :won or :lost" do
       for state <- [:won, :lost] do
         end_game = Game.new_game("secret") |> Map.put(:state, state)
         {attempted_move, _tally} = Game.make_move(end_game, "z")
         assert ^end_game = attempted_move
       end
+    end
+
+    test "set state to :repeated_guess for a duplicated guess" do
+      game = Game.new_game()
+
+      {game, _tally} = Game.make_move(game, "x")
+      assert game.state != :repeated_guess
+      {game, _tally} = Game.make_move(game, "z")
+      assert game.state != :repeated_guess
+      {game, _tally} = Game.make_move(game, "x")
+      assert game.state == :repeated_guess
+    end
+
+    test "keep track of guesses" do
+      game = Game.new_game()
+
+      {game, _tally} = Game.make_move(game, "x")
+      {game, _tally} = Game.make_move(game, "y")
+      {game, _tally} = Game.make_move(game, "x")
+      {game, _tally} = Game.make_move(game, "z")
+
+      assert MapSet.equal?(game.used, MapSet.new(["x", "y", "z"]))
     end
   end
 end
