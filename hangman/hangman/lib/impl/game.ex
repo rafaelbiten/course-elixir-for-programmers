@@ -106,6 +106,6 @@ defmodule Hangman.Impl.Game do
 
   @spec all_letters_discovered?(t) :: boolean
   defp all_letters_discovered?(game) do
-    Enum.all?(game.letters, &MapSet.member?(game.used_letters, &1))
+    MapSet.subset?(MapSet.new(game.letters), game.used_letters)
   end
 end
