@@ -4,14 +4,12 @@ defmodule HangmanGameTest do
 
   describe "new_game" do
     test "returns a valid initial Hangman game struct" do
-      game = Game.new_game("secret")
-
       assert %Game{
                state: :initial,
                turns_left: 7,
                used_letters: %MapSet{},
                letters: ~w(s e c r e t)
-             } = game
+             } = Game.new_game("secret")
     end
 
     test "letters uses only lower-case ASCII characters" do
@@ -25,64 +23,77 @@ defmodule HangmanGameTest do
   describe "make_move" do
     test "won't change state if state is :won or :lost" do
       for state <- [:won, :lost] do
-        end_game = Game.new_game("secret") |> Map.put(:state, state)
-        {attempted_move, _tally} = Game.make_move(end_game, "z")
-        assert ^end_game = attempted_move
+        Game.new_game("secret")
+        |> Map.put(:state, state)
+        |> tap(fn end_game ->
+          end_game
+          |> Game.make_move("z")
+          |> tap(fn attempted_move -> assert ^end_game = attempted_move end)
+        end)
       end
     end
 
     test "set state to :repeated_guess on duplicated guesses" do
-      game = Game.new_game()
-
-      {game, _tally} = Game.make_move(game, "x")
-      assert game.state != :repeated_guess
-      {game, _tally} = Game.make_move(game, "z")
-      assert game.state != :repeated_guess
-      {game, _tally} = Game.make_move(game, "x")
-      assert game.state == :repeated_guess
+      Game.new_game()
+      |> Game.make_move("x")
+      |> tap(fn game -> assert game.state != :repeated_guess end)
+      |> Game.make_move("z")
+      |> tap(fn game -> assert game.state != :repeated_guess end)
+      |> Game.make_move("x")
+      |> tap(fn game -> assert game.state == :repeated_guess end)
     end
 
     test "set state to :bad_guess on bad guesses" do
-      game = Game.new_game("secret")
-      {game, _tally} = Game.make_move(game, "e")
-      assert game.state != :bad_guess
-      {game, _tally} = Game.make_move(game, "y")
-      assert game.state == :bad_guess
-      {game, _tally} = Game.make_move(game, "t")
-      assert game.state != :bad_guess
-      {game, _tally} = Game.make_move(game, "z")
-      assert game.state == :bad_guess
+      Game.new_game("secret")
+      |> Game.make_move("e")
+      |> tap(fn game -> assert game.state != :bad_guess end)
+      |> Game.make_move("y")
+      |> tap(fn game -> assert game.state == :bad_guess end)
+      |> Game.make_move("t")
+      |> tap(fn game -> assert game.state != :bad_guess end)
+      |> Game.make_move("z")
+      |> tap(fn game -> assert game.state == :bad_guess end)
     end
 
     test "set state to :good_guess on good guesses" do
-      game = Game.new_game("secret")
-      {game, _tally} = Game.make_move(game, "y")
-      assert game.state != :good_guess
-      {game, _tally} = Game.make_move(game, "e")
-      assert game.state == :good_guess
-      {game, _tally} = Game.make_move(game, "z")
-      assert game.state != :good_guess
-      {game, _tally} = Game.make_move(game, "t")
-      assert game.state == :good_guess
+      Game.new_game("secret")
+      |> Game.make_move("y")
+      |> tap(fn game -> assert game.state != :good_guess end)
+      |> Game.make_move("e")
+      |> tap(fn game -> assert game.state == :good_guess end)
+      |> Game.make_move("z")
+      |> tap(fn game -> assert game.state != :good_guess end)
+      |> Game.make_move("t")
+      |> tap(fn game -> assert game.state == :good_guess end)
     end
 
-    test "set state to :lost when turns_left reaches 0" do
-      game = Game.new_game("secret")
-      {game_after_one_move, _tally} = Game.make_move(game, "a")
-      assert game_after_one_move.turns_left == game.turns_left - 1
-      {end_game, _tally} = game |> Map.put(:turns_left, 1) |> Game.make_move("z")
-      assert %{state: :lost, turns_left: 0} = end_game
+    test "set state to :lost when turns_left reaches 0 on a :bad_guess" do
+      Game.new_game("secret")
+      |> tap(fn initial_game ->
+        initial_game
+        |> Game.make_move("a")
+        |> tap(fn game -> assert game.turns_left == initial_game.turns_left - 1 end)
+        |> Map.put(:turns_left, 1)
+        |> Game.make_move("z")
+        |> tap(fn game -> assert %{state: :lost, turns_left: 0} = game end)
+      end)
+    end
+
+    test "set state to :won when all letters are discovered on a :good_guess" do
+      Game.new_game("win")
+      |> Game.make_move("w")
+      |> Game.make_move("i")
+      |> Game.make_move("n")
+      |> tap(fn game -> assert %{state: :won, turns_left: 4} = game end)
     end
 
     test "keep track of guesses within used_letters" do
-      game = Game.new_game()
-
-      {game, _tally} = Game.make_move(game, "x")
-      {game, _tally} = Game.make_move(game, "y")
-      {game, _tally} = Game.make_move(game, "x")
-      {game, _tally} = Game.make_move(game, "z")
-
-      assert MapSet.equal?(game.used_letters, MapSet.new(["x", "y", "z"]))
+      Game.new_game()
+      |> Game.make_move("x")
+      |> Game.make_move("y")
+      |> Game.make_move("x")
+      |> Game.make_move("z")
+      |> tap(fn game -> assert MapSet.equal?(game.used_letters, MapSet.new(["x", "y", "z"])) end)
     end
   end
 end
