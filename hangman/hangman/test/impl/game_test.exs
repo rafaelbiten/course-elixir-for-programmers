@@ -9,7 +9,7 @@ defmodule HangmanGameTest do
       assert %Game{
                state: :initial,
                turns_left: 7,
-               used: %MapSet{},
+               used_letters: %MapSet{},
                letters: ~w(s e c r e t)
              } = game
     end
@@ -31,7 +31,7 @@ defmodule HangmanGameTest do
       end
     end
 
-    test "set state to :repeated_guess for a duplicated guess" do
+    test "set state to :repeated_guess on duplicated guesses" do
       game = Game.new_game()
 
       {game, _tally} = Game.make_move(game, "x")
@@ -42,7 +42,39 @@ defmodule HangmanGameTest do
       assert game.state == :repeated_guess
     end
 
-    test "keep track of guesses" do
+    test "set state to :bad_guess on bad guesses" do
+      game = Game.new_game("secret")
+      {game, _tally} = Game.make_move(game, "e")
+      assert game.state != :bad_guess
+      {game, _tally} = Game.make_move(game, "y")
+      assert game.state == :bad_guess
+      {game, _tally} = Game.make_move(game, "t")
+      assert game.state != :bad_guess
+      {game, _tally} = Game.make_move(game, "z")
+      assert game.state == :bad_guess
+    end
+
+    test "set state to :good_guess on good guesses" do
+      game = Game.new_game("secret")
+      {game, _tally} = Game.make_move(game, "y")
+      assert game.state != :good_guess
+      {game, _tally} = Game.make_move(game, "e")
+      assert game.state == :good_guess
+      {game, _tally} = Game.make_move(game, "z")
+      assert game.state != :good_guess
+      {game, _tally} = Game.make_move(game, "t")
+      assert game.state == :good_guess
+    end
+
+    test "set state to :lost when turns_left reaches 0" do
+      game = Game.new_game("secret")
+      {game_after_one_move, _tally} = Game.make_move(game, "a")
+      assert game_after_one_move.turns_left == game.turns_left - 1
+      {end_game, _tally} = game |> Map.put(:turns_left, 1) |> Game.make_move("z")
+      assert %{state: :lost, turns_left: 0} = end_game
+    end
+
+    test "keep track of guesses within used_letters" do
       game = Game.new_game()
 
       {game, _tally} = Game.make_move(game, "x")
@@ -50,7 +82,7 @@ defmodule HangmanGameTest do
       {game, _tally} = Game.make_move(game, "x")
       {game, _tally} = Game.make_move(game, "z")
 
-      assert MapSet.equal?(game.used, MapSet.new(["x", "y", "z"]))
+      assert MapSet.equal?(game.used_letters, MapSet.new(["x", "y", "z"]))
     end
   end
 end
