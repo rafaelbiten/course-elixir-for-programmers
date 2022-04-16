@@ -84,7 +84,7 @@ defmodule HangmanGameTest do
       |> Game.make_move("w")
       |> Game.make_move("i")
       |> Game.make_move("n")
-      |> tap(fn game -> assert %{state: :won, turns_left: 4} = game end)
+      |> tap(fn game -> assert %{state: :won, turns_left: 7} = game end)
     end
 
     test "keep track of guesses within used_letters" do

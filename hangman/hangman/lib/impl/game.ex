@@ -41,6 +41,18 @@ defmodule Hangman.Impl.Game do
 
   # ===
 
+  @spec to_public_tally(t) :: public_tally
+  def to_public_tally(game) do
+    %{
+      state: game.state,
+      turns_left: game.turns_left,
+      used_letters: game.used_letters |> MapSet.to_list() |> Enum.sort(),
+      hangman: []
+    }
+  end
+
+  # ===
+
   @spec make_move(t, String.t()) :: t
   def make_move(%{state: state} = game, _guess)
       when state in [:lost, :won],
@@ -53,40 +65,23 @@ defmodule Hangman.Impl.Game do
     end
   end
 
-  # ===
-
-  @spec to_public_tally(t) :: public_tally
-  def to_public_tally(game) do
-    %{
-      state: game.state,
-      turns_left: game.turns_left,
-      used_letters: game.used_letters |> MapSet.to_list() |> Enum.sort(),
-      hangman: []
-    }
-  end
-
   # Private fns
 
   # ===
 
   @spec accept_move(t, String.t()) :: t
   defp accept_move(game, guess) do
-    game_with_accepted_move = %{
-      game
-      | used_letters: MapSet.put(game.used_letters, guess),
-        turns_left: game.turns_left - 1
-    }
+    game = %{game | used_letters: MapSet.put(game.used_letters, guess)}
 
     case _good_guess? = Enum.member?(game.letters, guess) do
-      true -> return_game_with_state(game_with_accepted_move, :good_guess)
-      false -> return_game_with_state(game_with_accepted_move, :bad_guess)
+      true -> return_game_with_state(game, :good_guess)
+      false -> return_game_with_state(%{game | turns_left: game.turns_left - 1}, :bad_guess)
     end
   end
 
   # ===
 
   @spec return_game_with_state(t, atom) :: t
-
   defp return_game_with_state(game, :good_guess) do
     case all_letters_discovered?(game) do
       true -> %{game | state: :won}
