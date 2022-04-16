@@ -47,13 +47,7 @@ defmodule Hangman.Impl.Game do
       state: game.state,
       turns_left: game.turns_left,
       used_letters: game.used_letters |> MapSet.to_list() |> Enum.sort(),
-      hangman:
-        Enum.map(game.letters, fn letter ->
-          case _guessed_letter? = MapSet.member?(game.used_letters, letter) do
-            true -> letter
-            false -> "_"
-          end
-        end)
+      hangman: reveal_guessed_letters(game)
     }
   end
 
@@ -108,5 +102,19 @@ defmodule Hangman.Impl.Game do
   @spec all_letters_discovered?(t) :: boolean
   defp all_letters_discovered?(game) do
     MapSet.subset?(MapSet.new(game.letters), game.used_letters)
+  end
+
+  # ===
+
+  @spec reveal_guessed_letters(t) :: list(String.t())
+  defp reveal_guessed_letters(%{state: :won} = game), do: game.letters
+
+  defp reveal_guessed_letters(game) do
+    Enum.map(game.letters, fn letter ->
+      case _guessed_letter? = MapSet.member?(game.used_letters, letter) do
+        true -> letter
+        false -> "_"
+      end
+    end)
   end
 end
