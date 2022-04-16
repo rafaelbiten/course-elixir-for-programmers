@@ -36,9 +36,9 @@ defmodule HangmanGameTest do
     test "set state to :repeated_guess on duplicated guesses" do
       Game.new_game()
       |> Game.make_move("x")
-      |> tap(fn game -> assert game.state != :repeated_guess end)
+      |> tap(fn game -> refute game.state == :repeated_guess end)
       |> Game.make_move("z")
-      |> tap(fn game -> assert game.state != :repeated_guess end)
+      |> tap(fn game -> refute game.state == :repeated_guess end)
       |> Game.make_move("x")
       |> tap(fn game -> assert game.state == :repeated_guess end)
     end
@@ -46,11 +46,11 @@ defmodule HangmanGameTest do
     test "set state to :bad_guess on bad guesses" do
       Game.new_game("secret")
       |> Game.make_move("e")
-      |> tap(fn game -> assert game.state != :bad_guess end)
+      |> tap(fn game -> refute game.state == :bad_guess end)
       |> Game.make_move("y")
       |> tap(fn game -> assert game.state == :bad_guess end)
       |> Game.make_move("t")
-      |> tap(fn game -> assert game.state != :bad_guess end)
+      |> tap(fn game -> refute game.state == :bad_guess end)
       |> Game.make_move("z")
       |> tap(fn game -> assert game.state == :bad_guess end)
     end
@@ -58,11 +58,11 @@ defmodule HangmanGameTest do
     test "set state to :good_guess on good guesses" do
       Game.new_game("secret")
       |> Game.make_move("y")
-      |> tap(fn game -> assert game.state != :good_guess end)
+      |> tap(fn game -> refute game.state == :good_guess end)
       |> Game.make_move("e")
       |> tap(fn game -> assert game.state == :good_guess end)
       |> Game.make_move("z")
-      |> tap(fn game -> assert game.state != :good_guess end)
+      |> tap(fn game -> refute game.state == :good_guess end)
       |> Game.make_move("t")
       |> tap(fn game -> assert game.state == :good_guess end)
     end
@@ -94,6 +94,14 @@ defmodule HangmanGameTest do
       |> Game.make_move("x")
       |> Game.make_move("z")
       |> tap(fn game -> assert MapSet.equal?(game.used_letters, MapSet.new(["x", "y", "z"])) end)
+    end
+  end
+
+  describe "to_public_tally" do
+    test "omits the letters (secret) of the game" do
+      game = Game.new_game("secret")
+      tally = Game.to_public_tally(game)
+      refute Map.has_key?(tally, :letters)
     end
   end
 end

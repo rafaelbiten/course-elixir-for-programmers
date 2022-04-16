@@ -47,7 +47,13 @@ defmodule Hangman.Impl.Game do
       state: game.state,
       turns_left: game.turns_left,
       used_letters: game.used_letters |> MapSet.to_list() |> Enum.sort(),
-      hangman: []
+      hangman:
+        Enum.map(game.letters, fn letter ->
+          case _guessed_letter? = MapSet.member?(game.used_letters, letter) do
+            true -> letter
+            false -> "_"
+          end
+        end)
     }
   end
 
