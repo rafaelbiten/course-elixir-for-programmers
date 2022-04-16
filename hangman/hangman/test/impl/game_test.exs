@@ -98,10 +98,66 @@ defmodule HangmanGameTest do
   end
 
   describe "to_public_tally" do
-    test "omits the letters (secret) of the game" do
-      game = Game.new_game("secret")
-      tally = Game.to_public_tally(game)
-      refute Map.has_key?(tally, :letters)
+    test "omits the game letters to be guessed" do
+      Game.new_game("secret")
+      |> Game.to_public_tally()
+      |> tap(fn tally -> refute Map.has_key?(tally, :letters) end)
+    end
+
+    test "only reveals the letters already guessed" do
+      Game.new_game("secret")
+      |> Game.make_move("x")
+      |> Game.make_move("e")
+      |> Game.make_move("z")
+      |> Game.make_move("r")
+      |> Game.to_public_tally()
+      |> tap(fn tally -> assert ~w(_ e _ r e _) = tally.hangman end)
+    end
+
+    test "returns the expected tally for a :won game" do
+      Game.new_game("secret")
+      |> Game.make_move("x")
+      |> Game.make_move("e")
+      |> Game.make_move("z")
+      |> Game.make_move("r")
+      |> Game.make_move("s")
+      |> Game.make_move("e")
+      |> Game.make_move("a")
+      |> Game.make_move("c")
+      |> Game.make_move("t")
+      |> Game.to_public_tally()
+      |> tap(fn tally ->
+        assert %{
+                 state: :won,
+                 turns_left: 4,
+                 used_letters: ~w(a c e r s t x z),
+                 hangman: ~w(s e c r e t)
+               } == tally
+      end)
+    end
+
+    test "returns the expected tally for a :lost game" do
+      Game.new_game("secret")
+      |> Game.make_move("a")
+      |> Game.make_move("b")
+      |> Game.make_move("c")
+      |> Game.make_move("d")
+      |> Game.make_move("e")
+      |> Game.make_move("f")
+      |> Game.make_move("g")
+      |> Game.make_move("h")
+      |> Game.make_move("i")
+      |> Game.make_move("j")
+      |> Game.make_move("h")
+      |> Game.to_public_tally()
+      |> tap(fn tally ->
+        assert %{
+                 state: :lost,
+                 turns_left: 0,
+                 used_letters: ~w(a b c d e f g h i),
+                 hangman: ~w(_ e c _ e _)
+               } == tally
+      end)
     end
   end
 end
