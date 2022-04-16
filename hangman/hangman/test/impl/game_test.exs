@@ -36,35 +36,35 @@ defmodule HangmanGameTest do
     test "set state to :repeated_guess on duplicated guesses" do
       Game.new_game()
       |> Game.make_move("x")
-      |> tap(fn game -> refute game.state == :repeated_guess end)
+      |> tap(fn game -> refute game.state === :repeated_guess end)
       |> Game.make_move("z")
-      |> tap(fn game -> refute game.state == :repeated_guess end)
+      |> tap(fn game -> refute game.state === :repeated_guess end)
       |> Game.make_move("x")
-      |> tap(fn game -> assert game.state == :repeated_guess end)
+      |> tap(fn game -> assert game.state === :repeated_guess end)
     end
 
     test "set state to :bad_guess on bad guesses" do
       Game.new_game("secret")
       |> Game.make_move("e")
-      |> tap(fn game -> refute game.state == :bad_guess end)
+      |> tap(fn game -> refute game.state === :bad_guess end)
       |> Game.make_move("y")
-      |> tap(fn game -> assert game.state == :bad_guess end)
+      |> tap(fn game -> assert game.state === :bad_guess end)
       |> Game.make_move("t")
-      |> tap(fn game -> refute game.state == :bad_guess end)
+      |> tap(fn game -> refute game.state === :bad_guess end)
       |> Game.make_move("z")
-      |> tap(fn game -> assert game.state == :bad_guess end)
+      |> tap(fn game -> assert game.state === :bad_guess end)
     end
 
     test "set state to :good_guess on good guesses" do
       Game.new_game("secret")
       |> Game.make_move("y")
-      |> tap(fn game -> refute game.state == :good_guess end)
+      |> tap(fn game -> refute game.state === :good_guess end)
       |> Game.make_move("e")
-      |> tap(fn game -> assert game.state == :good_guess end)
+      |> tap(fn game -> assert game.state === :good_guess end)
       |> Game.make_move("z")
-      |> tap(fn game -> refute game.state == :good_guess end)
+      |> tap(fn game -> refute game.state === :good_guess end)
       |> Game.make_move("t")
-      |> tap(fn game -> assert game.state == :good_guess end)
+      |> tap(fn game -> assert game.state === :good_guess end)
     end
 
     test "set state to :lost when turns_left reaches 0 on a :bad_guess" do
@@ -72,7 +72,7 @@ defmodule HangmanGameTest do
       |> tap(fn initial_game ->
         initial_game
         |> Game.make_move("a")
-        |> tap(fn game -> assert game.turns_left == initial_game.turns_left - 1 end)
+        |> tap(fn game -> assert game.turns_left === initial_game.turns_left - 1 end)
         |> Map.put(:turns_left, 1)
         |> Game.make_move("z")
         |> tap(fn game -> assert %{state: :lost, turns_left: 0} = game end)
@@ -132,7 +132,7 @@ defmodule HangmanGameTest do
                  turns_left: 4,
                  used_letters: ~w(a c e r s t x z),
                  hangman: ~w(s e c r e t)
-               } == tally
+               } === tally
       end)
     end
 
@@ -156,7 +156,7 @@ defmodule HangmanGameTest do
                  turns_left: 0,
                  used_letters: ~w(a b c d e f g h i),
                  hangman: ~w(_ e c _ e _)
-               } == tally
+               } === tally
       end)
     end
   end
