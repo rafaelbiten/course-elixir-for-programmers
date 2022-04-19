@@ -1,18 +1,4 @@
 defmodule ClientCli do
-  @moduledoc """
-  Documentation for `ClientCli`.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ClientCli.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  @spec start() :: :ok
+  defdelegate start, to: ClientCli.Impl.Player
 end
