@@ -42,7 +42,7 @@ defmodule ClientCli.Impl.Player do
   @spec print_hangman(tally) :: :ok
   defp print_hangman(tally) do
     IO.puts([
-      "Hangman: #{Enum.join(tally.hangman)} \n",
+      IO.ANSI.light_green() <> "Hangman: #{Enum.join(tally.hangman)} \n" <> IO.ANSI.reset(),
       "Turns left: #{to_string(tally.turns_left)} \n",
       "Letters used: [#{Enum.join(tally.used_letters, ", ")}]"
     ])
