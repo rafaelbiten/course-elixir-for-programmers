@@ -14,12 +14,13 @@ defmodule Cache do
   def put(key, value), do: Agent.update(__MODULE__, fn cache -> Map.put(cache, key, value) end)
 end
 
-defmodule Fib do
+defmodule Fibonacci do
   @moduledoc """
 
-  Cached Fib to calculate large Fibonacci sequences without crashing the machine.
+  Module to calculate large Fibonacci sequences without crashing my machine.
 
-  Challenge: Try calculating fib(100).
+  The challenge was:
+  Try calculating fib(100).
   If it comes back without crashing your machine, and before the sun has expanded to consume the Earth, then your cache worked...
 
   Usage:
@@ -37,22 +38,9 @@ defmodule Fib do
   def init, do: Cache.init()
 
   @spec of(number) :: number
-  def of(0), do: 0
-  def of(1), do: 1
-  def of(n), do: cached(n)
-
-  defp cached(n) do
-    case Cache.get(n) do
-      nil ->
-        result = cache_or_fib(n - 1) + cache_or_fib(n - 2)
-        Cache.put(n, result)
-        IO.puts("cached #{n}: #{result}")
-        result
-
-      value ->
-        value
-    end
-  end
+  def of(0), do: fib(0)
+  def of(1), do: fib(1)
+  def of(n), do: cache_or_fib(n)
 
   defp cache_or_fib(n) do
     case Cache.get(n) do
@@ -69,5 +57,5 @@ defmodule Fib do
 
   defp fib(0), do: 0
   defp fib(1), do: 1
-  defp fib(n), do: cache_or_fib(n - 1) + fib(n - 2)
+  defp fib(n), do: cache_or_fib(n - 1) + cache_or_fib(n - 2)
 end
