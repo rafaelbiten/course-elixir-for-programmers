@@ -1,4 +1,6 @@
 defmodule Hangman do
+  @moduledoc false
+
   alias Hangman.Runtime.Server
 
   @opaque game :: Server.t()
@@ -6,7 +8,7 @@ defmodule Hangman do
 
   @spec new_game :: game
   def new_game do
-    {:ok, game} = Server.start_link()
+    {:ok, game} = Hangman.Runtime.Application.start_game()
     game
   end
 

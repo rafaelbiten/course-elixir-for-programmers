@@ -1,4 +1,6 @@
 defmodule Hangman.Runtime.Server do
+  @moduledoc false
+
   use GenServer
 
   alias Hangman.Impl.Game
@@ -9,7 +11,8 @@ defmodule Hangman.Runtime.Server do
 
   # Client
 
-  def start_link do
+  @spec start_link(any) :: {:error, any} | {:ok, t}
+  def start_link(_args) do
     GenServer.start_link(__MODULE__, nil)
   end
 
