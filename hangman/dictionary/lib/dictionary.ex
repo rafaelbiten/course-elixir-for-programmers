@@ -1,4 +1,6 @@
 defmodule Dictionary do
+  @moduledoc false
+
   alias Dictionary.Runtime.Server
 
   @spec random_word() :: String.t()

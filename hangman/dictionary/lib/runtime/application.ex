@@ -1,5 +1,8 @@
 defmodule Dictionary.Runtime.Application do
-  use Supervisor
+  @moduledoc false
+
+  use Application
+
   def start(_type, _args) do
     children = [{Dictionary.Runtime.Server, []}]
 

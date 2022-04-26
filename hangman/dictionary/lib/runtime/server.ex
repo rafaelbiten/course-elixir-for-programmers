@@ -1,4 +1,6 @@
 defmodule Dictionary.Runtime.Server do
+  @moduledoc false
+
   use Agent
 
   alias Dictionary.Impl.Words

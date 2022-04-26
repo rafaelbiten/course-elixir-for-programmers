@@ -1,4 +1,6 @@
 defmodule Dictionary.Impl.Words do
+  @moduledoc false
+
   @cwd File.cwd!()
 
   @type t :: list(String.t())
