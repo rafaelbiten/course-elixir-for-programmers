@@ -1,30 +1,33 @@
 defmodule ClientCli.Impl.Player do
+  @moduledoc false
+
+  @typep game :: Hangman.game()
   @typep tally :: Hangman.tally()
 
   @spec start() :: :ok
   def start() do
-    {:ok, game_pid} = Hangman.new_game()
-    interact(game_pid, Hangman.get_tally(game_pid))
-    Hangman.end_game(game_pid)
+    game = Hangman.new_game()
+    interact(game, Hangman.get_tally(game))
+    Hangman.end_game(game)
   end
 
-  @spec interact(pid(), tally) :: :ok
-  defp interact(_game_pid, tally = %{state: :won}) do
+  @spec interact(game, tally) :: :ok
+  defp interact(_game, tally = %{state: :won}) do
     IO.puts("You won! The word is #{Enum.join(tally.hangman)}!")
   end
 
-  defp interact(_game_pid, _tally = %{state: :lost}) do
+  defp interact(_game, _tally = %{state: :lost}) do
     IO.puts("And you lost... :(")
   end
 
-  defp interact(game_pid, tally) do
+  defp interact(game, tally) do
     IEx.Helpers.clear()
     print_state(tally)
     print_hangman(tally)
 
     guess = prompt_for_guess()
-    tally = Hangman.make_move(game_pid, guess)
-    interact(game_pid, tally)
+    tally = Hangman.make_move(game, guess)
+    interact(game, tally)
   end
 
   @spec print_state(tally) :: :ok
