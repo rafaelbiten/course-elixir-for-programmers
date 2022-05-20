@@ -1,4 +1,4 @@
-defmodule ClientHtmlWeb.ErrorHelpers do
+defmodule ClientHtml.Impl.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """

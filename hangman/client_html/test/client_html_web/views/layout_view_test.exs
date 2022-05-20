@@ -1,5 +1,5 @@
-defmodule ClientHtmlWeb.LayoutViewTest do
-  use ClientHtmlWeb.ConnCase, async: true
+defmodule ClientHtml.Impl.LayoutViewTest do
+  use ClientHtml.Impl.ConnCase, async: true
 
   # When testing helpers, you may want to import Phoenix.HTML and
   # use functions such as safe_to_string() to convert the helper

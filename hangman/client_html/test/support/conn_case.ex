@@ -1,4 +1,4 @@
-defmodule ClientHtmlWeb.ConnCase do
+defmodule ClientHtml.Impl.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule ClientHtmlWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use ClientHtmlWeb.ConnCase, async: true`, although
+  by setting `use ClientHtml.Impl.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,12 +22,12 @@ defmodule ClientHtmlWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import ClientHtmlWeb.ConnCase
+      import ClientHtml.Impl.ConnCase
 
-      alias ClientHtmlWeb.Router.Helpers, as: Routes
+      alias ClientHtml.Impl.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint ClientHtmlWeb.Endpoint
+      @endpoint ClientHtml.Impl.Endpoint
     end
   end
 

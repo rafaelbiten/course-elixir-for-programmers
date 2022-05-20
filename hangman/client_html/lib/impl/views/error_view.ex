@@ -1,5 +1,5 @@
-defmodule ClientHtmlWeb.ErrorView do
-  use ClientHtmlWeb, :view
+defmodule ClientHtml.Impl.ErrorView do
+  use ClientHtml.Impl, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

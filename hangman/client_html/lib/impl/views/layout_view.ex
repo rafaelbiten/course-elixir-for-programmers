@@ -1,5 +1,5 @@
-defmodule ClientHtmlWeb.LayoutView do
-  use ClientHtmlWeb, :view
+defmodule ClientHtml.Impl.LayoutView do
+  use ClientHtml.Impl, :view
 
   # Phoenix LiveDashboard is available only in development by default,
   # so we instruct Elixir to not warn if the dashboard route is missing.

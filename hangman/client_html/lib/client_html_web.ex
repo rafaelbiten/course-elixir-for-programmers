@@ -1,12 +1,12 @@
-defmodule ClientHtmlWeb do
+defmodule ClientHtml.Impl do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use ClientHtmlWeb, :controller
-      use ClientHtmlWeb, :view
+      use ClientHtml.Impl, :controller
+      use ClientHtml.Impl, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,18 +19,18 @@ defmodule ClientHtmlWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: ClientHtmlWeb
+      use Phoenix.Controller, namespace: ClientHtml.Impl
 
       import Plug.Conn
-      alias ClientHtmlWeb.Router.Helpers, as: Routes
+      alias ClientHtml.Impl.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/client_html_web/templates",
-        namespace: ClientHtmlWeb
+        root: "lib/impl/templates",
+        namespace: ClientHtml.Impl
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -44,7 +44,7 @@ defmodule ClientHtmlWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {ClientHtmlWeb.LayoutView, "live.html"}
+        layout: {ClientHtml.Impl.LayoutView, "live.html"}
 
       unquote(view_helpers())
     end
@@ -93,8 +93,8 @@ defmodule ClientHtmlWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import ClientHtmlWeb.ErrorHelpers
-      alias ClientHtmlWeb.Router.Helpers, as: Routes
+      import ClientHtml.Impl.ErrorHelpers
+      alias ClientHtml.Impl.Router.Helpers, as: Routes
     end
   end
 

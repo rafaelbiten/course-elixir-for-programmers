@@ -1,4 +1,4 @@
-defmodule ClientHtml.Application do
+defmodule ClientHtml.Runtime.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,11 +9,11 @@ defmodule ClientHtml.Application do
   def start(_type, _args) do
     children = [
       # Start the Telemetry supervisor
-      ClientHtmlWeb.Telemetry,
+      ClientHtml.Impl.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: ClientHtml.PubSub},
       # Start the Endpoint (http/https)
-      ClientHtmlWeb.Endpoint
+      ClientHtml.Impl.Endpoint
       # Start a worker by calling: ClientHtml.Worker.start_link(arg)
       # {ClientHtml.Worker, arg}
     ]
@@ -28,7 +28,7 @@ defmodule ClientHtml.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    ClientHtmlWeb.Endpoint.config_change(changed, removed)
+    ClientHtml.Impl.Endpoint.config_change(changed, removed)
     :ok
   end
 end

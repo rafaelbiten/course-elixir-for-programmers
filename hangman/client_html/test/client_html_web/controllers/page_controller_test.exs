@@ -1,5 +1,5 @@
-defmodule ClientHtmlWeb.PageControllerTest do
-  use ClientHtmlWeb.ConnCase
+defmodule ClientHtml.Impl.PageControllerTest do
+  use ClientHtml.Impl.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")

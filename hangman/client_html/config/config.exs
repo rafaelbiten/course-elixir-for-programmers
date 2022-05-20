@@ -8,9 +8,9 @@
 import Config
 
 # Configures the endpoint
-config :client_html, ClientHtmlWeb.Endpoint,
+config :client_html, ClientHtml.Impl.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: ClientHtmlWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [view: ClientHtml.Impl.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: ClientHtml.PubSub,
   live_view: [signing_salt: "Z3JOsiJu"]
 

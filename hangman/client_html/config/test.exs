@@ -2,7 +2,7 @@ import Config
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :client_html, ClientHtmlWeb.Endpoint,
+config :client_html, ClientHtml.Impl.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "QpPqGL4P5jIpAXH68jhy0WrdglcTFq+asKqZU0FpKOHAjSmqaHFW5LzvypVKJm9Z",
   server: false

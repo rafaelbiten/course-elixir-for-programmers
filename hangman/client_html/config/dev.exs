@@ -6,7 +6,7 @@ import Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with esbuild to bundle .js and .css sources.
-config :client_html, ClientHtmlWeb.Endpoint,
+config :client_html, ClientHtml.Impl.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
@@ -44,12 +44,12 @@ config :client_html, ClientHtmlWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :client_html, ClientHtmlWeb.Endpoint,
+config :client_html, ClientHtml.Impl.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"lib/client_html_web/(live|views)/.*(ex)$",
-      ~r"lib/client_html_web/templates/.*(eex)$"
+      ~r"lib/impl/(live|views)/.*(ex)$",
+      ~r"lib/impl/templates/.*(eex)$"
     ]
   ]
 

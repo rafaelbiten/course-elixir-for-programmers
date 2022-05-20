@@ -1,3 +1,3 @@
-defmodule ClientHtmlWeb.PageViewTest do
-  use ClientHtmlWeb.ConnCase, async: true
+defmodule ClientHtml.Impl.PageViewTest do
+  use ClientHtml.Impl.ConnCase, async: true
 end
