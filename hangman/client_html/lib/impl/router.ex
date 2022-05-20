@@ -17,7 +17,13 @@ defmodule ClientHtml.Impl.Router do
   scope "/", ClientHtml.Impl do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", HangmanController, :redirect_to_hangman
+  end
+
+  scope "/hangman", ClientHtml.Impl do
+    pipe_through :browser
+
+    get "/", HangmanController, :index
   end
 
   # Other scopes may use custom stacks.
