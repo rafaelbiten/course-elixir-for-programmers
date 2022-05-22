@@ -24,6 +24,8 @@ defmodule ClientHtml.Impl.Router do
     pipe_through :browser
 
     get "/", HangmanController, :index
+    post "/", HangmanController, :new
+    put "/", HangmanController, :update
   end
 
   # Other scopes may use custom stacks.
