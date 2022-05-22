@@ -15,13 +15,21 @@ defmodule ClientHtml.Impl.HangmanController do
   end
 
   def update(conn, params) do
+    conn
+    |> get_session(:game)
+    |> Hangman.make_move(params["make_move"]["guess"])
+
+    put_in(conn.params["make_move"]["guess"], "")
+    |> redirect(to: Routes.hangman_path(conn, :show))
+  end
+
+  def show(conn, _params) do
     tally =
       conn
       |> get_session(:game)
-      |> Hangman.make_move(params["make_move"]["guess"])
+      |> Hangman.get_tally()
 
-    put_in(conn.params["make_move"]["guess"], "")
-    |> render("game.html", page_title: "New Hangman Game", tally: tally)
+    render(conn, "game.html", page_title: "Show Hangman Game", tally: tally)
   end
 
   @spec redirect_to_hangman(Plug.Conn.t(), any) :: Plug.Conn.t()
