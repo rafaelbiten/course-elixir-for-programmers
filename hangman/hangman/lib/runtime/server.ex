@@ -4,10 +4,12 @@ defmodule Hangman.Runtime.Server do
   use GenServer
 
   alias Hangman.Impl.Game
+  alias Hangman.Runtime.Watchdog
 
   @type t :: pid()
   @type public_tally :: Game.public_tally()
   @typep game_pid :: t
+  @game_timeout :timer.minutes(60)
 
   # Client
 
@@ -36,17 +38,20 @@ defmodule Hangman.Runtime.Server do
 
   @impl true
   def init(_args) do
-    {:ok, Game.new_game()}
+    watcher = Watchdog.start(@game_timeout)
+    {:ok, {Game.new_game(), watcher}}
   end
 
   @impl true
-  def handle_call({:make_move, guess}, _from, game) do
+  def handle_call({:make_move, guess}, _from, {game, watcher}) do
+    Watchdog.heartbeat(watcher)
     game = Game.make_move(game, guess)
-    {:reply, Game.to_public_tally(game), game}
+    {:reply, Game.to_public_tally(game), {game, watcher}}
   end
 
   @impl true
-  def handle_call({:get_tally}, _from, game) do
-    {:reply, Game.to_public_tally(game), game}
+  def handle_call({:get_tally}, _from, {game, watcher}) do
+    Watchdog.heartbeat(watcher)
+    {:reply, Game.to_public_tally(game), {game, watcher}}
   end
 end
