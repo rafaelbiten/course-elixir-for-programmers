@@ -1,7 +1,8 @@
 .hangman_grid {
     display: grid;
-    grid-template-areas: "hangman overview"
-                         "form form"
+    grid-template-areas:
+        "hangman   overview"
+        "form      form"
     ;
     grid-gap: 20px;
     grid-template-columns: 1fr 3fr;
@@ -24,7 +25,8 @@
 
 .hangman_word {
     font-weight: bold;
-    letter-spacing: .5rem; 
+    letter-spacing: .2rem;
+    font-family: menlo, consolas, monospace;
 }
 
 .hangman_tally {
