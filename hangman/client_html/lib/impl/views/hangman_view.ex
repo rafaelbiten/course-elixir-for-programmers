@@ -4,7 +4,7 @@ defmodule ClientHtml.Impl.HangmanView do
   defdelegate render_hangman(turns_left), to: ClientHtml.Impl.HangmanHelpers
 
   def render_controls(conn, state) when state in [:won, :lost] do
-    button("Play Again", to: Routes.hangman_path(conn, :new))
+    button("Play Again", to: Routes.hangman_path(conn, :new), autofocus: true)
   end
 
   def render_controls(conn, _state) do
