@@ -17,7 +17,7 @@ defmodule ClientLiveViewWeb.Impl.Router do
   scope "/", ClientLiveViewWeb.Impl do
     pipe_through :browser
 
-    get "/", PageController, :index
+    live "/", Live.Hangman
   end
 
   # Other scopes may use custom stacks.
