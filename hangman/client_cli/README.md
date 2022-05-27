@@ -1,6 +1,11 @@
 # ClientCli
 
-**TODO: Add description**
+To start a new game:
+
+* Install dependencies with `mix deps.get`
+* Start the project inside IEx with `iex -S mix`
+* Start a new game with `ClientCli.start()`
+* Enjoy the game...
 
 ## Installation
 

@@ -7,6 +7,12 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
+> **Note on the default Port**:
+> When starting the server, if the app fails to start with a `:eaddrinuse` listen error,
+> try changing the default port of the app under `config/dev.exs`. Optionally,
+> check what's using the port `4000` (in unix-like systems) with `lsof -i tcp:4000`.
+> The process can be killed with the `kill <PID>` command.
+
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
 ## Learn more
